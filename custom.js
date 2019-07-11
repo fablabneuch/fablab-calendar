@@ -14,7 +14,7 @@ $(function() {
 
     if(!(JSON.stringify(range) === JSON.stringify(newRange))) {
       range = newRange;
-      $('#calendar').fullCalendar('option', 'visible', range);
+      $('#calendar').fullCalendar('option', 'visibleRange', range);
     }
   }
 
