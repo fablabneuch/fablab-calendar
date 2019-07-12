@@ -25,6 +25,10 @@ html, body {
     background: none;
 }
 
+#info {
+  margin-top: 15px;
+}
+
 #footer {
   margin: 40px 0px;
 }
