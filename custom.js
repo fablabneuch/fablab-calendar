@@ -22,8 +22,9 @@ $(function() {
         $('#calendar').fullCalendar('refetchEvents');
       },
       error : function(error) {
-        var date = lastUpdate.getDate() + "." + (lastUpdate.getMonth() + 1) + "." + lastUpdate.getFullYear();
-        var time = lastUpdate.getHours() + ":" + lastUpdate.getMinutes();
+        function addZ(n) { return n < 10 ? '0' + n : '' + n; }
+        var date = addZ(lastUpdate.getDate()) + "." + addZ(lastUpdate.getMonth() + 1) + "." + lastUpdate.getFullYear();
+        var time = addZ(lastUpdate.getHours()) + ":" + addZ(lastUpdate.getMinutes());
         $('#info').show();
         $('#info').html('Dernière actualisation ' + date + ' ' + time);
       }
