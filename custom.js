@@ -40,7 +40,7 @@ $(function() {
       range = newRange;
       $('#calendar').fullCalendar('option', 'visibleRange', range);
     }
-  }, 5 * 1000);
+  }, refreshDelay * 1000);
 
   $('#calendar').fullCalendar({
     schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
