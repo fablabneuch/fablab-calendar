@@ -3,10 +3,34 @@ $(function() {
     start: moment(new Date().setDate(new Date().getDate() - beforeDay)).format('YYYY-MM-DD'),
     end: moment(new Date().setDate(new Date().getDate() + afterDay + 1)).format('YYYY-MM-DD')
   };
+  var lastUpdate;
 
-  function update() {
-    $('#calendar').fullCalendar('refetchEvents');
+  setInterval(function() {
+    // Check connectivity to Google calendars APIs
+    var key = googleApiKey;
+    var account = events[0]['googleCalendarId'];
+    $.ajax({
+      url : 'https://www.googleapis.com/calendar/v3/calendars/' + account + '/events',
+      type : 'GET',
+      data : 'key=' + key,
+      timeout: 3000,
+      success : function(result) {
+        lastUpdate = new Date();
+        $('#info').hide();
+        $('#info').html('');
+        //Update events on calendars
+        $('#calendar').fullCalendar('refetchEvents');
+      },
+      error : function(error) {
+        function addZ(n) { return n < 10 ? '0' + n : '' + n; }
+        var date = addZ(lastUpdate.getDate()) + "." + addZ(lastUpdate.getMonth() + 1) + "." + lastUpdate.getFullYear();
+        var time = addZ(lastUpdate.getHours()) + ":" + addZ(lastUpdate.getMinutes());
+        $('#info').show();
+        $('#info').html('Dernière actualisation ' + date + ' ' + time);
+      }
+    });
 
+    // Update range of visibility
     var newRange = {
       start: moment(new Date().setDate(new Date().getDate() - beforeDay)).format('YYYY-MM-DD'),
       end: moment(new Date().setDate(new Date().getDate() + afterDay + 1)).format('YYYY-MM-DD')
@@ -14,13 +38,9 @@ $(function() {
 
     if(!(JSON.stringify(range) === JSON.stringify(newRange))) {
       range = newRange;
-      $('#calendar').fullCalendar('option', 'visible', range);
+      $('#calendar').fullCalendar('option', 'visibleRange', range);
     }
-  }
-
-  setInterval(function() {
-    update();
-  }, 5 * 60 * 1000);
+  }, refreshDelay * 1000);
 
   $('#calendar').fullCalendar({
     schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
@@ -45,5 +65,7 @@ $(function() {
 
     googleCalendarApiKey: googleApiKey,
     eventSources: events
-  })
+  });
+
+  lastUpdate = new Date();
 });
